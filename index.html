@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halftone Portrait Creator</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="styles.css">
+    <script src="breathing-halftone.pkgd.js"></script>	
+</head>
+<body>
+    <header>
+        <h1>Artem</h1>
+    </header>
+
+    <main>
+        <section class="left-section">
+		<h2>select image to convert</h2>
+		<label for="dotSizeSlider">Dot Size:</label>
+		<input type="range" id="dotSizeSlider" min="0" max="1" step="0.01" value="0.025"><br>
+		<button id="convertBtn" class="upload-btn mui-btn">Convert to Halftone</button>
+        </section>
+
+        <section class="right-section">
+            <h2>Upload Image</h2>
+            <label for="imageInput" class="upload-btn mui-btn">
+                <input type="file" id="imageInput" accept="image/*" class="mui-btn--primary">
+            </label>
+            <div id="imagePreviewContainer">
+                <img id="imagePreview" src="#" alt="Image Preview" class="mui-img" />
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Artem</p>
+    </footer>
+
+    <script src="breathing-halftone.pkgd.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
