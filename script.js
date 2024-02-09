@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function createHalftoneInstance() {
         var options = {
             dotSize: parseFloat(dotSizeSlider.value),
-            dotSizeThreshold: 0.05,
+            dotSizeThreshold: 0.005,
             initVelocity: 0.02,
             oscPeriod: 1,
             oscAmplitude: 0,
