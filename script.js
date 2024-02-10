@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", function() {
             oscAmplitude: 0,
             isAdditive: false,
             isRadial: false,
-            channels: ['red', 'green', 'blue','lum'],
-            isChannelLens: true,
+            channels: ['red', 'green', 'blue'],
+            isChannelLens: false,
             friction: 0.06,
             hoverDiameter: 0.3,
             hoverForce: -0.02,
@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var dotSize = parseFloat(dotSizeSlider.value);
         halftoneInstance.options.dotSize = dotSize;
         halftoneInstance.render();
+		createHalftoneInstance();
     });
 
     document.getElementById('imageInput').addEventListener('change', function(event) {
