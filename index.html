@@ -4,69 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Halftone Portrait Creator</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-    <link rel="stylesheet" href="styles.css">
-    <script src="breathing-halftone.pkgd.js"></script>	
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css" />   
+	<link rel="stylesheet" href="styles.css">
+    <script defer="defer" src="bundle.js"></script>	
 </head>
 <body>
-    <header>
-        <h1>Artem</h1>
-    </header>
-
-    <main>
-        <section class="left-section">
-		<h2>select image to convert</h2>
-		<label for="dotSizeSlider">Dot Size:</label>
-		<input type="range" id="dotSizeSlider" min=".000001" max="40" step="0.01" value="0.025"><br>
-		
-		<label for="dotSizeSlider">Dot Size Threshold Size:</label>
-		<input type="range" id="dotSizeSlider" min="0" max="1" step="0.01" value="0.05"><br>
-		
-		<label for="dotSizeSlider">Init Velocity:</label>
-		<input type="range" id="dotSizeSlider" min="0" max="1" step="0.01" value="0.025"><br>
-		
-		<label for="dotSizeSlider">Osc Period:</label>
-		<input type="range" id="dotSizeSlider" min="0" max="1" step="0.01" value="0.05"><br>
-
-		<label for="dotSizeSlider">Is Additive:</label>
-		<input type="range" id="dotSizeSlider" min="0" max="1" step="0.01" value="0.025"><br>
-		
-		<label for="dotSizeSlider">Is Radial:</label>
-		<input type="range" id="dotSizeSlider" min="0" max="1" step="0.01" value="0.05"><br>
-
-		<label for="dotSizeSlider">Friction:</label>
-		<input type="range" id="dotSizeSlider" min="0" max="1" step="0.01" value="0.025"><br>
-		
-		<label for="dotSizeSlider">Hover Diameter:</label>
-		<input type="range" id="dotSizeSlider" min="0" max="1" step="0.01" value="0.05"><br>
-
-		<label for="dotSizeSlider">Hover Force:</label>
-		<input type="range" id="dotSizeSlider" min="0" max="1" step="0.01" value="0.025"><br>
-		
-		<label for="dotSizeSlider">Active Diameter:</label>
-		<input type="range" id="dotSizeSlider" min="0" max="1" step="0.01" value="0.05"><br>
-
-		<label for="dotSizeSlider">Active Force:</label>
-		<input type="range" id="dotSizeSlider" min="0" max="1" step="0.01" value="0.025"><br>	
-        </section>
-
-        <section class="right-section">
-            <h2>Upload Image</h2>
-            <label for="imageInput" class="upload-btn mui-btn">
-                <input type="file" id="imageInput" accept="image/*" class="mui-btn--primary">
-            </label>
-            <div id="imagePreviewContainer">
-                <img id="imagePreview" src="#" alt="Image Preview" class="mui-img" />
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Artem</h1>
+            <p class="subtitle">SVG halftone patterns from raster images</p>
+        </div>
+    </section>
+ <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <div class="field"><label class="label" for="input">Input file</label>
+                        <div class="control">
+                            <div class="file has-name"><label class="file-label"><input class="file-input" type="file" accept="image/png, image/jpeg, image/gif" name="input" id="input"> <span class="file-cta"><span class="file-icon"><i class="fas fa-upload"></i> </span><span class="file-label">Choose a file… </span></span><span class="file-name" id="inputname">PNG, JPEG or GIF</span></label></div>
+                        </div>
+                    </div>
+                    <div class="field"><label class="label" for="outputwidth">Output width</label>
+                        <div class="field has-addons">
+                            <p class="control is-expanded"><input class="input" value="200" id="outputwidth" /></p>
+                            <p class="control"><a class="button is-static">mm</a></p>
+                        </div>
+                    </div>
+                    <div class="field"><label class="label" for="spacing">Spacing</label>
+                        <div class="field has-addons">
+                            <p class="control is-expanded"><input class="input" value="5" id="spacing"></p>
+                            <p class="control"><a class="button is-static">mm</a></p>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field"><label class="label" for="shape">Shape</label>
+                                <div class="control">
+                                    <div class="select"><select id="shape"><option value="">Default</option><option value="circle">Circle</option><option value="hex">Hex</option><option value="diamond">Diamond</option></select></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="field"><label class="label" for="grid">Grid</label>
+                                <div class="control">
+                                    <div class="select"><select id="grid"><option value="">Default</option><option value="rect">Rect</option><option value="hex">Hex</option><option value="diamond">Diamond</option><option value="poisson">Poisson</option></select></div>
+                                </div>
+                            </div>
+                        </div>
+						<div class="column">
+                            <div class="field"><label class="label" for="grid">Grid Line</label>
+                                <div class="control">
+                                    <div class="select"><select id="grid"><option value="">None</option><option value="grid-on">Grid on</option></select></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column">					
+							<div class="field">
+								<div class="control"><label class="checkbox"><input type="checkbox" id="line"> Line</label></div>
+							</div>
+						</div>
+                        <div class="column">
+							<div class="field">
+								<div class="control"><label class="checkbox"><input type="checkbox" id="diagonal"> Diagonal</label></div>
+							</div>
+						</div>
+                        <div class="column">						
+							<div class="field">
+								<div class="control"><label class="checkbox"><input type="checkbox" id="radial"> Radial</label></div>
+							</div>
+						</div>
+					</div>						
+                    <div class="field">
+                        <div class="control"><label class="checkbox"><input type="checkbox" id="invert"> Invert image</label></div>
+                    </div>
+                    <div class="field">
+                        <div class="control"><label class="checkbox"><input type="checkbox" id="cutpaths"> Output cutting paths only</label></div>
+                    </div>
+                    <div class="field is-grouped is-grouped-right">
+                        <p class="control"><a download="halftone.svg" href="javascript:alert('No SVG generated yet')" class="button is-primary is-medium" id="download">Download SVG</a></p>
+                    </div>
+                </div>
+                <div class="column"><label class="label">Output</label>
+                    <div class="box overlay-container">
+                        <div id="target">
+                            <p>No SVG generated yet</p>
+                        </div>
+                        <div id="spinner-overlay" class="is-invisible">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Artem</p>
-    </footer>
-
-    <script src="breathing-halftone.pkgd.js"></script>
-    <script src="script.js"></script>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="tile is-ancestor">
+                <div class="tile is-parent">
+                    <div class="tile is-child has-text-grey is-size-7 has-text-centered">
+                        <p>This project copied from <a href="http://vestera.as">Erik Vesteraas</a> | Code on <a href="https://github.com/evestera/svg-halftone">GitHub</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</section>
 </body>
 </html>
