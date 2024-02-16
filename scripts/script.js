@@ -53,3 +53,61 @@
             track_pageview: true,
             persistence: 'localStorage'
         });
+		
+        function toggleGridLines() {
+            var gridCheckbox = document.getElementById('gridCheckbox');
+            var gridSizeInput = document.getElementById('gridSize');
+            var gridColorInput = document.getElementById('gridColor');
+            var halftoneSVG = document.getElementById('halftoneSVG');
+
+            if (gridCheckbox.checked) {
+                var gridSize = parseInt(gridSizeInput.value);
+                var gridColor = gridColorInput.value;
+
+                var numLinesX = Math.ceil(halftoneSVG.getAttribute('width') / gridSize);
+                var numLinesY = Math.ceil(halftoneSVG.getAttribute('height') / gridSize);
+
+                for (var i = 0; i < numLinesX; i++) {
+                    var y = i * gridSize;
+                    halftoneSVG.innerHTML += `<line x1="0" y1="${y}" x2="400" y2="${y}" stroke="${gridColor}" />`;
+                }
+
+                for (var j = 0; j < numLinesY; j++) {
+                    var x = j * gridSize;
+                    halftoneSVG.innerHTML += `<line x1="${x}" y1="0" x2="${x}" y2="400" stroke="${gridColor}" />`;
+                }
+            } else {
+                var lines = halftoneSVG.querySelectorAll('line');
+                lines.forEach(function(line) {
+                    line.remove();
+                });
+            }
+        }
+function exportCircleData() {
+
+    const circles = document.querySelectorAll('circle');
+
+    let dataString = '';
+
+    circles.forEach(circle => {
+
+        const cx = circle.getAttribute('cx');
+        const cy = circle.getAttribute('cy');
+        const r = circle.getAttribute('r');
+
+        dataString += `Circle: cx=${cx}, cy=${cy}, r=${r}\n`;
+    });
+
+    console.log(dataString);
+
+    const blob = new Blob([dataString], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'circle_data.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+		
