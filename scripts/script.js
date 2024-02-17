@@ -110,4 +110,8 @@ function exportCircleData() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
-		
+function handleGridChange() {
+    if (document.getElementById('grid').value === 'grid-on') {
+        exportCircleData();
+    }
+}		
