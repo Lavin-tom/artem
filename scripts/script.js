@@ -53,36 +53,6 @@
             track_pageview: true,
             persistence: 'localStorage'
         });
-		
-        function toggleGridLines() {
-            var gridCheckbox = document.getElementById('gridCheckbox');
-            var gridSizeInput = document.getElementById('gridSize');
-            var gridColorInput = document.getElementById('gridColor');
-            var halftoneSVG = document.getElementById('halftoneSVG');
-
-            if (gridCheckbox.checked) {
-                var gridSize = parseInt(gridSizeInput.value);
-                var gridColor = gridColorInput.value;
-
-                var numLinesX = Math.ceil(halftoneSVG.getAttribute('width') / gridSize);
-                var numLinesY = Math.ceil(halftoneSVG.getAttribute('height') / gridSize);
-
-                for (var i = 0; i < numLinesX; i++) {
-                    var y = i * gridSize;
-                    halftoneSVG.innerHTML += `<line x1="0" y1="${y}" x2="400" y2="${y}" stroke="${gridColor}" />`;
-                }
-
-                for (var j = 0; j < numLinesY; j++) {
-                    var x = j * gridSize;
-                    halftoneSVG.innerHTML += `<line x1="${x}" y1="0" x2="${x}" y2="400" stroke="${gridColor}" />`;
-                }
-            } else {
-                var lines = halftoneSVG.querySelectorAll('line');
-                lines.forEach(function(line) {
-                    line.remove();
-                });
-            }
-        }
 function exportCircleData() {
 
     const circles = document.querySelectorAll('circle');
