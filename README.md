@@ -30,5 +30,4 @@ This project is copied from Erik Vesteraas's work. The original project can be f
 - `styles.css`: CSS file for styling the web application.
 - `scripts/bundle.js`: JavaScript bundle file for handling the application logic.
 - `scripts/script.js`: Additional JavaScript file for script logic.
-- `LICENSE`: License information for the project.
 - `README.md`: Readme file providing instructions and information about the project.
