@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SVG to Excel Filter Tool</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f4f8, #d9e4ec);
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      margin: auto;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #2c3e50;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    input[type="file"] {
+      display: block;
+      margin: 20px auto;
+      padding: 10px;
+      border: 2px dashed #3498db;
+      border-radius: 8px;
+      background: #ecf6fc;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="file"]:hover {
+      border-color: #2980b9;
+    }
+
+    button {
+      background: #3498db;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background: #2980b9;
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #27ae60;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 15px;
+      color: black;
+      font-size: 1rem;
+      margin-top: auto;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 20px;
+      }
+      .container {
+        padding: 20px;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>SVG to Excel Filter Tool</h2>
+    <input type="file" id="svgFile" accept=".svg" />
+    <button onclick="runPipeline()">Run</button>
+    <p id="status"></p>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    lāvin
+  </footer>
+
+  <script>
+    function parseSVG(svgText) {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(svgText, "image/svg+xml");
+      const circles = xmlDoc.querySelectorAll("circle");
+      const data = [];
+
+      circles.forEach(circle => {
+        const cx = parseFloat(circle.getAttribute("cx"));
+        const cy = parseFloat(circle.getAttribute("cy"));
+        const r = parseFloat(circle.getAttribute("r"));
+        if (!isNaN(cx) && !isNaN(cy) && !isNaN(r)) {
+          data.push({ A: cx, B: cy, C: r });
+        }
+      });
+
+      return data;
+    }
+
+    function processData(data) {
+      const df = data.map(row => ({
+        A: parseFloat(row.A.toFixed(4)),
+        B: parseFloat(row.B.toFixed(4)),
+        C: parseFloat(row.C.toFixed(4))
+      }));
+
+      const uniqueCx = [...new Set(df.map(d => d.A))].sort((a, b) => a - b);
+      if (uniqueCx.length < 2) {
+        alert("Need at least two unique cx values to compute step.");
+        return;
+      }
+
+      const step = parseFloat((uniqueCx[1] - uniqueCx[0]).toFixed(4));
+      const start = uniqueCx[0];
+      const end = uniqueCx[uniqueCx.length - 1] + 0.0001;
+      const filterValues = [];
+      for (let val = start; val <= end; val += step) {
+        filterValues.push(parseFloat(val.toFixed(4)));
+      }
+
+      const bVals = df.map(d => d.B);
+      const bStart = Math.min(...bVals);
+      const bEnd = Math.max(...bVals) + step;
+      const bValues = [];
+      for (let val = bStart; val <= bEnd; val += step) {
+        bValues.push(parseFloat(val.toFixed(4)));
+      }
+
+      const result = bValues.map(b => {
+        const row = { B: b };
+        filterValues.forEach(a => {
+          const match = df.find(d => d.A === a && d.B === b);
+          row[`Column_${a}`] = match ? match.C : 0;
+        });
+        return row;
+      });
+
+      return result;
+    }
+
+    function exportToExcel(data, filename) {
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
+      XLSX.writeFile(wb, filename);
+    }
+
+    function runPipeline() {
+      const fileInput = document.getElementById("svgFile");
+      const status = document.getElementById("status");
+      const file = fileInput.files[0];
+
+      if (!file || !file.name.endsWith(".svg")) {
+        alert("Please select a valid SVG file.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          const svgText = e.target.result;
+          const rawData = parseSVG(svgText);
+          if (rawData.length === 0) {
+            alert("No circle elements found in the SVG.");
+            return;
+          }
+          const processed = processData(rawData);
+          exportToExcel(processed, "final_filtered_data.xlsx");
+          status.textContent = "✅ Data processed and saved to final_filtered_data.xlsx";
+        } catch (err) {
+          alert("Error: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+  </script>
+</body>
+</html>
